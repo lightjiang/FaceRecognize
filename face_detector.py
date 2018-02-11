@@ -3,6 +3,8 @@ import dlib
 import cv2
 import os
 import time
+import settings
+import uuid
 from base import Base
 
 
@@ -14,7 +16,7 @@ class FaceDetector(Base):
         self.face_detector = dlib.get_frontal_face_detector()
         super().__init__()
 
-    def detect_face(self):
+    def detect_face(self, log_status=True):
         if self.img is None:
             raise AttributeError('please load img before detect')
         t = time.time()
@@ -22,14 +24,25 @@ class FaceDetector(Base):
         res = []
         for index, face in enumerate(dets):
             temp = {
+                'id': str(uuid.uuid1()),
                 'position': face,
-                'score': scores[index]
+                'score': scores[index],
+                'src': self.img_path
             }
             if scores[index] > 0:
                 res.append(temp)
-            # else:
-            #     self.add_face_on_img(temp, color=(255, 0, 0))
-        print("Number of faces detected: {}\n takes:{}s".format(len(res), time.time() - t))
+        if log_status:
+            print("Detecting faces takes: {}s\nNumber of faces detected: {}".format(time.time() - t, len(res)))
+        return res
+
+    def detect_faces_from_imgs(self, imgs: list):
+        t = time.time()
+        res = []
+        for img_path in imgs:
+            self.load_img(img_path)
+            res += self.detect_face(log_status=False)
+        self.img = None
+        print("Detecting faces takes: {}s\nNumber of faces detected: {}".format(time.time() - t, len(res)))
         return res
 
 
@@ -41,23 +54,23 @@ class FaceDetectorCNN(FaceDetector):
     """
     def __init__(self):
         super().__init__()
-        self.face_detector = dlib.cnn_face_detection_model_v1(
-            '/home/light/PycharmProjects/ImageProcess/model/mmod_human_face_detector.dat')
+        self.face_detector = dlib.cnn_face_detection_model_v1(settings.mmod_human_face_detector)
 
-    def detect_face(self):
+    def detect_face(self, log_status=True):
         t = time.time()
         dets= self.face_detector(self.img, 1)
-        print("Number of faces detected: {}\n takes:{}s".format(len(dets), time.time()-t))
         res = []
         for index, face in enumerate(dets):
             temp = {
+                'id': str(uuid.uuid1()),
                 'position': face.rect,
-                'score': face.confidence
+                'score': face.confidence,
+                'src': self.img_path
             }
             if face.confidence > -0.1:
                 res.append(temp)
-            else:
-                self.add_face_on_img(temp, color=(255, 0, 0))
+        if log_status:
+            print("Detecting face takes: {}s\nNumber of faces detected: {}".format(time.time() - t, len(res)))
         return res
 
 
