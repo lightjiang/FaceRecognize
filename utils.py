@@ -2,11 +2,13 @@
 import numpy as np
 import freetype
 import copy
+import os
+BASEPATH = os.path.abspath(os.path.dirname(__file__))
 
 
 class PutChineseText(object):
     def __init__(self, ttf='uming.ttc'):
-        self._face = freetype.Face(ttf)
+        self._face = freetype.Face(os.path.join(BASEPATH, ttf))
 
     def draw_text(self, image, text, pos, text_size=24, text_color=(255,255,255)):
         '''

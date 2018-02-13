@@ -34,29 +34,27 @@ for index, name in enumerate(temp):
         if len(set(labels)) > 5:
             continue
         label = labels.index(max(labels))
-        a_face = {'score': 0}
+        a_face = {'score': 0.7}
+        cluster_imgs = set()
         for face_id in res:
             face = res[face_id]
-            if face['label'] == label and face['score'] > a_face['score']:
-                a_face = face
-
-        if a_face['score'] < 1:
-            continue
-
-        f.load_img(a_face['src'])
-        faces = f.detect_face(log_status=False)
-        for face in faces:
-            if compare_two_face_data(a_face, face):
-                print(a_face)
-                print(face)
-                features = f.detect_features(face['position'])
-                vector = f.compute_face_vector(features)
-                #f.show()
-                #f.show(img=f.cut_face(face), name='face')
-                f.save_face(face, name=name, vector=vector)
-                # key = f.type_any_key_to_continue()
-                # print([key])
-                break
+            if face['label'] == label:
+                if face['score'] > a_face['score']:
+                    a_face = face
+                if face['score'] > 0.7:
+                    cluster_imgs.add(face['src'])
+        for img_path in cluster_imgs:
+            f.load_img(img_path)
+            faces = f.detect_face(log_status=False)
+            for face in faces:
+                if compare_two_face_data(a_face, face):
+                    features = f.detect_features(face['position'])
+                    vector = f.compute_face_vector(features)
+                    #f.show()
+                    #f.show(img=f.cut_face(face), name='face')
+                    f.save_face(face, name=name, vector=vector)
+                    # key = f.type_any_key_to_continue()
+                    # print([key])
         print(name)
         print(float(index)/len(temp))
         print('\n'*4)

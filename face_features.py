@@ -33,7 +33,7 @@ class FaceFeatures(FaceDetector):
 
 if __name__ == '__main__':
     f = FaceFeatures()
-    f.load_img('results/known/e7420ac0-0d91-11e8-93de-a0c589189417.jpg')
+    f.load_img('data/crowd/0001.jpg')
     faces = f.detect_face()
     for face in faces:
         marks = f.get_marks(face['position'])

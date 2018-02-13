@@ -12,8 +12,8 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
     def __init__(self):
         FaceRecognition.__init__(self)
         VedioBase.__init__(self)
-        # track 3 faces in the sametime
-        self.trackers = [dlib.correlation_tracker() for _ in range(3)]
+        # track 5 faces in the sametime
+        self.trackers = [dlib.correlation_tracker() for _ in range(7)]
         self.track_names = []
         self.detectd_faces = []
 
@@ -64,10 +64,9 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
         # d: dump model data
         if keyValue == 100:
             for index, face in enumerate(self.detectd_faces):
-                probable_id, probable_cov = self.get_likely_one(face['recognize_results'])
-                if not probable_id:
+                name = face.get('name', None)
+                if not name:
                     continue
-                name = self.known_faces[probable_id]['name']
                 self.update_known_data(face, name, face['vector'])
             self.save_known_data()
             print('dumped')
@@ -96,11 +95,11 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
                 self.detectd_faces = self._recognize()
                 for index, face in enumerate(self.detectd_faces):
                     results = face['recognize_results']
-                    probable_id, probable_cov = self.get_likely_one(results)
-                    if not probable_id:
+                    name, probable_cov, _ = self.knn_filter(results)
+                    if not name:
                         continue
-                    name = self.known_faces[probable_id]['name']
                     p = face['position']
+                    face['name'] = name
                     self.trackers[index].start_track(self.frame, p)
                     self.track_names.append(name + ' : %s' % round(probable_cov, 3))
             else:
@@ -113,6 +112,7 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
 
 if __name__ == '__main__':
     v = VedioFaceRecognize()
+    print(len(v.known_faces))
     v.run()
 
 

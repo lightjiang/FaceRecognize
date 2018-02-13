@@ -33,6 +33,8 @@ class FaceRecognition(FaceFeatures):
             self.known_vectors = json.loads(f.read())
 
     def init_flann_index(self):
+        self.index_vectors = []
+        self.index_ids = []
         for _id, v in self.known_vectors.items():
             self.index_vectors.append(np.loads(base64.b64decode(v)))
             self.index_ids.append(_id)
@@ -53,10 +55,12 @@ class FaceRecognition(FaceFeatures):
     def build_index(self, vectors):
         if isinstance(vectors, list):
             vectors = np.array(vectors)
+        del self.flann
+        self.flann = cyflann.FLANNIndex()
         self.flann.build_index(vectors, algorithm="autotuned", target_precision=0.9)
 
-    def search(self, vector, threshold=0.5):
-        a, b = self.flann.nn_index(vector, 3)
+    def search(self, vector, threshold=0.6):
+        a, b = self.flann.nn_index(vector, 10)
         res = []
         convince = []
         a = a[0]
@@ -128,16 +132,16 @@ class FaceRecognition(FaceFeatures):
         self.load_img(path)
         faces = self._recognize()
         for face in faces:
-            self.show(self.cut_face(face))
+            self.show(self.cut_face(face), name='face')
             results = face['recognize_results']
             if len(results.keys()) == 0:
                 print('sorry, i can\'t recognize him/her.')
             else:
-                probable_id, probable_cov = self.get_likely_one(results)
-                name = self.known_faces[probable_id]['name']
-                self.evaluate(name, probable_cov)
+                name, probable_cov, _ = self.knn_filter(results)
+                print('%s : %s' % (name, probable_cov))
                 self.type_any_key_to_continue()
-                if probable_cov > 0.03:
+                cv2.destroyWindow('face')
+                if probable_cov > 0.80:
                     choice = str(input('is it right? y/n'))
                     if choice.lower() == 'y':
                         print('updating')
@@ -149,14 +153,37 @@ class FaceRecognition(FaceFeatures):
             # input('type any key to continue')
             self.type_any_key_to_continue()
 
-    def get_likely_one(self, results):
+    def knn_filter(self, results):
+        if not results:
+            return '', 0, {}
         probable_id = ''
+        probable_name = ''
         probable_cov = 1
+        names = {}
+        d_sum = len(results) / 1.3
         for _id, cov in results.items():
             if cov < probable_cov:
-                probable_cov = cov
                 probable_id = _id
-        return probable_id, probable_cov
+                probable_cov = cov
+
+            name = self.known_faces[_id]['name']
+            d = 5 ** (5 - cov / 0.1)
+            d_sum += d
+            if name in names:
+                names[name] += d
+            else:
+                names[name] = d
+        names[self.known_faces[probable_id]['name']] += 10
+        d_sum += 10
+        probable_cov = 0
+        for name in names:
+            names[name] = names[name] / d_sum
+            score = names[name]
+            if score > probable_cov:
+                probable_cov = score
+                probable_name = name
+            print(name, score)
+        return probable_name, probable_cov, names
 
     def _recognize(self, log_status=True):
         t = time.time()
@@ -173,24 +200,6 @@ class FaceRecognition(FaceFeatures):
         if log_status:
             print("recognize faces takes: {}s\nNumber of faces detected: {}".format(time.time() - t, len(faces)))
         return faces
-
-    def evaluate(self, name, cov):
-        if cov > 0.4:
-            print('有可能是:%s' % name)
-        elif cov > 0.3:
-            print('有可能是:%s' % name)
-        elif cov > 0.2:
-            print('有可能是:%s' % name)
-        elif cov > 0.1:
-            print('很有可能是:%s' % name)
-        else:
-            print('百分之99是:%s' % name)
-        print('差异度：%s' % cov)
-
-
-def cnn_filter(data: list):
-    pass
-    return
 
 
 def train_faces(img):
@@ -220,6 +229,5 @@ def start_recognize_faces():
 
 
 if __name__ == '__main__':
-    f = FaceRecognition()
-    f.delete_one('蒋亮亮 : 0.379')
+    start_recognize_faces()
     # r = f.recognize('data/star/乔振宇/6.jpg')
