@@ -90,7 +90,7 @@ def detect_imgs():
 
 if __name__ == '__main__':
     f = FaceDetector()
-    f.load_img('/home/light/PycharmProjects/ImageProcess/data/frontal/0001.jpg')
+    f.load_img('data/crowd/0001.jpg')
     faces = f.detect_face()
     f.add_faces(faces)
     f.show()
