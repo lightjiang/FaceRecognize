@@ -180,7 +180,6 @@ class FaceRecognition(FaceFeatures):
             if score > probable_cov:
                 probable_cov = score
                 probable_name = name
-            print(name, score)
         return probable_name, probable_cov, names
 
     def _recognize(self, log_status=True):
