@@ -88,13 +88,12 @@ class PutChineseText(object):
                     img[y_pos + row][x_pos + col][2] = color[2]
 
 
-if __name__ == '__main__':
-    # just for test
+def test_put_chinese_text():
     import cv2
     line = '好的'
-    img = np.zeros([300,300,3])
+    img = np.zeros([300, 300, 3])
 
-    color_ = (0,255,0)
+    color_ = (0, 255, 0)
     pos = (3, 3)
     text_size = 24
 
@@ -103,3 +102,10 @@ if __name__ == '__main__':
 
     cv2.imshow('ss', image)
     cv2.waitKey(0)
+
+
+if __name__ == '__main__':
+    test_put_chinese_text()
+    import scipy.spatial
+    scipy.spatial.cKDTree
+    # just for test

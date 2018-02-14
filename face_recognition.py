@@ -8,15 +8,14 @@ import time
 import cv2
 import traceback
 from face_features import FaceFeatures
-
-import cyflann
+from scipy.spatial import KDTree
 
 
 class FaceRecognition(FaceFeatures):
     def __init__(self):
         super().__init__()
         self.face_predictor = dlib.face_recognition_model_v1(settings.face_recognition_model_v1)
-        self.flann = cyflann.FLANNIndex()
+        self.flann = KDTree(np.array([[0, 0]]))
         self.known_faces = {}
         self.known_vectors = {}
         self.init_know_data()
@@ -56,15 +55,14 @@ class FaceRecognition(FaceFeatures):
         if isinstance(vectors, list):
             vectors = np.array(vectors)
         del self.flann
-        self.flann = cyflann.FLANNIndex()
-        self.flann.build_index(vectors, algorithm="autotuned", target_precision=0.9)
+        # self.flann = cyflann.FLANNIndex()
+        # self.flann.build_index(vectors, algorithm="autotuned", target_precision=0.9)
+        self.flann = KDTree(vectors)
 
     def search(self, vector, threshold=0.6):
-        a, b = self.flann.nn_index(vector, 10)
+        b, a = self.flann.query(x=vector, k=10)
         res = []
         convince = []
-        a = a[0]
-        b = b[0]
         for index, cov in enumerate(b):
             score = np.sqrt(cov)
             if score < threshold:
@@ -229,5 +227,7 @@ def start_recognize_faces():
 
 
 if __name__ == '__main__':
-    start_recognize_faces()
+    # start_recognize_faces()
+    f = FaceRecognition()
+    f.recognize('data/star/A-Lin/1.jpg')
     # r = f.recognize('data/star/乔振宇/6.jpg')

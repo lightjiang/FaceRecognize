@@ -46,7 +46,7 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
 
         # h: print hz
         if keyValue == 104:
-            print('%s  hz' % self.update_hz)
+            print('%s  hz' % self.cap.get(cv2.CAP_PROP_FPS))
 
         # esc
         if keyValue == 27:
