@@ -59,7 +59,8 @@ if __name__ == '__main__':
         'data/star/BY2/1.jpg',
         'data/star/BY2/2.jpg',
         'data/star/BY2/3.jpg',
-        'data/star/BY2/4.jpg'
+        'data/star/BY2/4.jpg',
+
     ])
     for face_id in res:
         face = res[face_id]
@@ -68,5 +69,5 @@ if __name__ == '__main__':
         f.load_img(os.path.join(f.base_path, face['src']))
         features = f.detect_features(face['position'])
         img = f.alignment_face(features)
-        f.show(img, name=str(face['label']))
+        f.show(img, name=str(face['id']))
         f.type_any_key_to_continue()

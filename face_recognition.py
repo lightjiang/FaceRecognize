@@ -228,5 +228,14 @@ def start_recognize_faces():
 if __name__ == '__main__':
     # start_recognize_faces()
     f = FaceRecognition()
-    f.recognize('data/star/A-Lin/1.jpg')
+    ids = []
+    for _id, item in f.known_faces.items():
+        if item['name'] in ['成龙', '范冰冰', '胡歌', '霍建华', '张子枫', '林心如']:
+            ids.append(_id)
+    for _id in ids:
+        face = f.known_faces[_id]
+        print(face['path'])
+        f.load_img(face['path'])
+        f.show(face['id'])
+
     # r = f.recognize('data/star/乔振宇/6.jpg')

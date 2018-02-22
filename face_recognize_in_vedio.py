@@ -4,18 +4,23 @@ import dlib
 from face_recognition import FaceRecognition
 from vedio_base import VedioBase
 from utils import PutChineseText
+import time
 
 
 class VedioFaceRecognize(FaceRecognition, VedioBase):
     put_chinese_text = PutChineseText().draw_text
 
     def __init__(self):
+        start = time.time()
         FaceRecognition.__init__(self)
         VedioBase.__init__(self)
+        # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
+        # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
         # track 5 faces in the sametime
         self.trackers = [dlib.correlation_tracker() for _ in range(7)]
         self.track_names = []
         self.detectd_faces = []
+        print('init', time.time() - start)
 
     def process_image(self):
         if self.show_status == 'running':
@@ -30,13 +35,13 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
                     text_position = (int(box_predict.left()) + 20, int(box_predict.bottom()) - 20)
                     try:
                         self.frame = self.put_chinese_text(self.frame, self.track_names[index], text_position,
-                                                           text_size=20, text_color=(0, 255, 255))
+                                                           text_size=20, text_color=(255, 0, 0))
                     except:
                         pass
                     cv2.rectangle(self.frame,
                                   (int(box_predict.left()), int(box_predict.top())),
                                   (int(box_predict.right()), int(box_predict.bottom())),
-                                  (0, 255, 255), 1)
+                                  (0, 0, 255), 1)
             cv2.imshow('main', self.frame)
         elif self.show_status == 'pause':
             cv2.imshow('main', self.frame)
@@ -47,6 +52,7 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
         # h: print hz
         if keyValue == 104:
             print('%s  hz' % self.cap.get(cv2.CAP_PROP_FPS))
+            print('%s  hz' % self.update_hz)
 
         # esc
         if keyValue == 27:
@@ -112,7 +118,6 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
 
 if __name__ == '__main__':
     v = VedioFaceRecognize()
-    print(len(v.known_faces))
     v.run()
 
 
