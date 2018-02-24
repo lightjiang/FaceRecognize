@@ -33,15 +33,15 @@ int main(int argc, char **argv)
             cout << "processing image " << argv[i] << endl;
             cv::Mat image;
             image = cv::imread(argv[i], cv::IMREAD_COLOR);
+
+            // change the opencv image object:: Mat to dlib image object:: array_2d
             dlib::cv_image<rgb_pixel> img(image);
             std::vector<rectangle> dets = detector(img);
             cout << "Number of faces detected: " << dets.size() << dets[0].left() <<dets[1] << image.size() << endl<< image;
             for (auto temp_point: dets){
                 cout << temp_point<< temp_point.left() <<endl;
                 mark_face(image, temp_point);
-                // cv::rectangle(image, cv::Point(temp_point.left(), temp_point.top()), cv::Point(temp_point.right(), temp_point.bottom()),cv::Scalar(255,0,0),1,1,0);
             }
-            // cv::rectangle(image, cv::Point(dets[0][0][0], dets[0][0][1]));
             cv::namedWindow("Display window", cv::WINDOW_AUTOSIZE); // Create a window for display.
             cv::imshow("Display window", image);                // Show our image inside it.
             cv::waitKey(0);                                     // Wait for a keystroke in the window

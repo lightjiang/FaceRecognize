@@ -94,7 +94,7 @@ def detect_imgs():
 
 if __name__ == '__main__':
     f = FaceDetector()
-    f.load_img('results/known/23d198d2-0f1f-11e8-93de-a0c589189417.jpg')
+    f.load_img('data/crowd/0001.jpg')
     faces = f.detect_face()
     f.add_faces(faces)
     f.show()

@@ -1,6 +1,20 @@
 # FaceRecognize
 
-## 目录结构
+## 要完成的目标或功能
+
+- 人脸检测
+- 人脸特征提取
+- 人脸识别
+- 用摄像头实时完成以上三种功能
+- 用python、cpp完成以上三种功能
+- 移植到树莓派上
+
+
+## 项目文件结构
+
+> 项目地址： https://github.com/lightjiang/FaceRecognize.git
+
+
 ``` bash
 .
 ├── cpp_src     # cpp 源码
