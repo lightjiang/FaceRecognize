@@ -1,4 +1,9 @@
 # coding=utf-8
+"""
+light
+20180202
+人脸聚类
+"""
 import dlib
 import os
 import time

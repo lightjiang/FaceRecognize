@@ -1,4 +1,10 @@
 # coding=utf-8
+"""
+light
+20180202
+人脸对齐
+"""
+
 import dlib
 import cv2
 from face_features import FaceFeatures
@@ -18,7 +24,7 @@ class FaceAlignment(FaceFeatures):
 
 if __name__ == '__main__':
     f = FaceAlignment()
-    f.load_img('/home/light/PycharmProjects/ImageProcess/data/frontal/0017.jpg')
+    f.load_img('data/frontal/0017.jpg')
     f.show(name='src')
     faces = f.detect_face()
     for face in faces:

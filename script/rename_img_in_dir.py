@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+重命名目录下图片
+"""
 import os
 
 dir_path = '/home/light/PycharmProjects/ImageProcess/data/crowd'

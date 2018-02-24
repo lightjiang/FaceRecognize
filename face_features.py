@@ -1,4 +1,7 @@
 # coding=utf-8
+"""
+light 人脸特征检测
+"""
 import dlib
 import cv2
 import settings

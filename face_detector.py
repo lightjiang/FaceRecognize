@@ -1,4 +1,8 @@
 # coding=utf-8
+"""
+light
+人脸检测
+"""
 import dlib
 import cv2
 import os
@@ -49,7 +53,7 @@ class FaceDetector(Base):
 class FaceDetectorCNN(FaceDetector):
     """
     use CNN model
-    too long to detect, normally in 10s, but sometimes in decades seconds
+    too long to detect, normally in 10s,  sometimes in decades seconds
 
     """
     def __init__(self):
@@ -75,7 +79,7 @@ class FaceDetectorCNN(FaceDetector):
 
 
 def detect_imgs():
-    dir_path = '/home/light/PycharmProjects/ImageProcess/data/profile'
+    dir_path = 'data/profile'
     temp = os.listdir(dir_path)
     temp.sort()
     f = FaceDetector()

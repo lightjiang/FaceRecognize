@@ -15,6 +15,7 @@ class Base(object):
         self.img_path = ''
 
     def load_img(self, path, relative=True, flags=cv2.IMREAD_COLOR):
+        # 自动从web加载图片
         if path.startswith('http'):
             path = self.download_web_img(path)
 
@@ -23,6 +24,7 @@ class Base(object):
             path = os.path.join(self.base_path, path)
         if os.path.exists(path):
             res = cv2.imread(path, flags=flags)
+            # 转换图片通道， opencv默认bgr格式，dlib需要rgb格式
             self.img = cv2.cvtColor(res, cv2.COLOR_BGR2RGB)
             self.img_path = img_path
             return self.img
@@ -31,6 +33,7 @@ class Base(object):
 
     def download_web_img(self, url):
         path = 'data/auto_download_img/%s.jpg' % uuid.uuid1()
+        # 复制的百度图片链接有时会下载异常
         request.urlretrieve(url, path)
         print('download complete')
         return path
@@ -41,6 +44,7 @@ class Base(object):
         cv2.imwrite(path, cv2.cvtColor(img, cv2.COLOR_RGB2BGR))
 
     def add_marks(self, pos, color=None):
+        # 在self.img 上添加标记
         if isinstance(pos, tuple):
             pos = [pos]
         elif isinstance(pos, list):
@@ -54,6 +58,7 @@ class Base(object):
             cv2.circle(self.img, p, 2, color, 1)
 
     def add_faces(self, faces, show_score=True, color=None, add_text=None):
+        # 在self.img 上添加脸部识别框
         if isinstance(faces, dict):
             faces = [faces]
         elif isinstance(faces, list):
@@ -77,6 +82,7 @@ class Base(object):
                             (255, 255, 255), 1)
 
     def show(self, img=None, name=None):
+        # 显示图片
         if img is None:
             img = self.img
         if not name:

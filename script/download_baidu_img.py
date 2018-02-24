@@ -1,9 +1,16 @@
 # coding=utf-8
+"""
+light
+20180202
+从百度下载图片
+"""
 import urllib.request
 import os
 import re
 
 url = r'https://image.baidu.com/search/index?tn=baiduimage&ct=201326592&lm=-1&cl=2&ie=gbk&word=%D5%FD%C1%B3&fr=ala&ala=1&alatpl=adress&pos=0&hs=2&xthttps=111111'
+
+# 获取正脸图片并下载到data/frontal路径下
 BASEPATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__))) + '/data/frontal/'
 
 imgHtml = urllib.request.urlopen(url).read().decode('utf-8')

@@ -1,6 +1,14 @@
+# coding = utf-8
+"""
+light
+20180202
+下载明星图片
+"""
+
 import os
 from urllib import request
 import re
+# 明星图片路径
 BASEPATH = os.path.abspath(os.path.dirname(__file__)) + '/data/star/'
 
 
@@ -9,12 +17,15 @@ class DownloadImg(object):
         pass
 
     def parse_names(self):
+        # 搜索以a....等字母开头明星
         for k in 'ABCDEFGHIJKLMNOPQRSTUVWXYZ':
             page = request.urlopen('http://www.27270.com/star/0_0_%s/' % k).read().decode('GBK')
             seq = re.findall(r'(<img[^>]*uploads/tu/mx/[^>]*/>)', page)
+            # 明星列表
             for item in seq:
                 name = re.findall(r'alt="([^"]*)"', item)[0]
                 star_id = re.findall(r'uploads/tu/mx/(\d+)/', item)[0]
+                # 下载相关图片
                 self.download_picture(star_id, name)
 
 

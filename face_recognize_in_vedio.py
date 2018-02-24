@@ -1,4 +1,8 @@
 # coding = utf-8
+"""
+视频中识别人脸
+"""
+
 import cv2
 import dlib
 from face_recognition import FaceRecognition
@@ -54,7 +58,7 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
             print('%s  hz' % self.cap.get(cv2.CAP_PROP_FPS))
             print('%s  hz' % self.update_hz)
 
-        # esc
+        # esc： 退出
         if keyValue == 27:
             self.run_status = False
         # s(save_img)
@@ -67,7 +71,7 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
                 self.show_status = 'running'
             else:
                 self.show_status = 'pause'
-        # d: dump model data
+        # d: dump model data，将该次识别结果保存的已知数据库里
         if keyValue == 100:
             for index, face in enumerate(self.detectd_faces):
                 name = face.get('name', None)
@@ -77,9 +81,11 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
             self.save_known_data()
             print('dumped')
         # i : init index
+        # 重新建立索引
         if keyValue == 105:
             self.init_flann_index()
         # t: train model
+        # 在暂停模式下可以训练模型，需要手动输入识别脸的名字
         if keyValue == 116 and self.show_status == 'pause':
             self.update_img()
             faces = self.detect_face()
@@ -95,6 +101,7 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
             self.save_known_data()
             cv2.destroyWindow('test')
         # r: face_recognize
+        # 第一次按r ，识别人脸并追踪，按d保存这次结果， 按i重新建立索引，第二次按r取消追踪
         if keyValue == 114:
             if not self.track_names:
                 self.update_img()
