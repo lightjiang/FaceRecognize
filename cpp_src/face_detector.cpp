@@ -37,7 +37,7 @@ int main(int argc, char **argv)
             // change the opencv image object:: Mat to dlib image object:: array_2d
             dlib::cv_image<rgb_pixel> img(image);
             std::vector<rectangle> dets = detector(img);
-            cout << "Number of faces detected: " << dets.size() << dets[0].left() <<dets[1] << image.size() << endl<< image;
+            //cout << "Number of faces detected: " << dets.size() << dets[0].left() <<dets[1] << image.size() << endl<< image;
             for (auto temp_point: dets){
                 cout << temp_point<< temp_point.left() <<endl;
                 mark_face(image, temp_point);
