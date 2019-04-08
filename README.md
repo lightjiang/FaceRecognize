@@ -12,8 +12,6 @@
 
 ## 项目文件结构
 
-> 项目地址： https://github.com/lightjiang/FaceRecognize.git
-
 
 ``` bash
 .

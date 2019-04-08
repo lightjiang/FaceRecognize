@@ -61,4 +61,4 @@ data/
 model/
 results
 cmake-build-debug/
-
+.tags

@@ -272,4 +272,4 @@ def start_recognize_faces():
 if __name__ == '__main__':
     # start_recognize_faces()
     f = FaceRecognition()
-    r = f.recognize('data/star/乔振宇/6.jpg')
+    r = f.recognize('/home/light/PycharmProjects/FaceRecognize/data/star/井柏然/1.jpg')

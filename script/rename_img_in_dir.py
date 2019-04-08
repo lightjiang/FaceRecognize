@@ -4,7 +4,7 @@
 """
 import os
 
-dir_path = '/home/light/PycharmProjects/ImageProcess/data/crowd'
+dir_path = '/home/light/Documents/icon'
 temp = os.listdir(dir_path)
 temp.sort()
 for index, f in enumerate(temp):

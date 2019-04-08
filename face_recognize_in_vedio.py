@@ -36,6 +36,7 @@ class VedioFaceRecognize(FaceRecognition, VedioBase):
                     tracker.update(self.frame)
                     positions.append(tracker.get_position())
                 for index, box_predict in enumerate(positions):
+                    print(box_predict)
                     text_position = (int(box_predict.left()) + 20, int(box_predict.bottom()) - 20)
                     try:
                         self.frame = self.put_chinese_text(self.frame, self.track_names[index], text_position,
